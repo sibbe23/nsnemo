@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginForm from './components/LoginForm/LoginForm';
+import CandidateLogin from './components/LoginForm/CandidateLogin';
+import UserDashboard from './components/Dashboard/User';
+import CandidateDashboard from './components/Dashboard/Candidate';
+import DarkModeToggle from './components/Darkmode/DarkmodeToggle';
+import Sidebar from './components/Sidebar/Sidebar'; // Import Sidebar component
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false); // State for dark mode
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className={`app ${darkMode ? 'dark-mode' : ''}`}>
+        <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} /> {/* Pass down dark mode state */}
+        <Sidebar darkMode={darkMode} /> {/* Pass down dark mode state */}
+
+        <Routes>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/candidate-login" element={<CandidateLogin />} />
+          {/* Pass down dark mode state to UserDashboard and CandidateDashboard */}
+          <Route path="/user-dashboard" element={<UserDashboard />} />
+          <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
