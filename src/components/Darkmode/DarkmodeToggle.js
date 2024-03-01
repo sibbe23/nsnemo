@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 
-const DarkModeToggle = ({ darkMode, setDarkMode }) => {
+
+const DarkModeToggle = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
   const toggleDarkMode = () => {
     const updatedDarkMode = !darkMode;
     setDarkMode(updatedDarkMode);
@@ -13,7 +16,7 @@ const DarkModeToggle = ({ darkMode, setDarkMode }) => {
   useEffect(() => {
     const isDarkModeEnabled = localStorage.getItem('darkMode') === 'true';
     setDarkMode(isDarkModeEnabled);
-  }, [setDarkMode]);
+  }, []);
 
   useEffect(() => {
     const applyTheme = (isDarkMode) => {
@@ -28,10 +31,10 @@ const DarkModeToggle = ({ darkMode, setDarkMode }) => {
   }, [darkMode]);
 
   return (
-    <div className="dark-mode-toggle position-absolute d-flex align-items-center justify-content-end" style={{ right: '10px', top: '10px' }}>
-      <div className="mr-2">
-        <FontAwesomeIcon icon={darkMode ? faMoon : faSun} color={darkMode ? '#ffffff' : '#000000'} />
-      </div>
+    <div className="dark-mode-toggle-container d-flex align-items-center justify-content-end">
+      <span className="mr-2">
+        <FontAwesomeIcon className='link' icon={darkMode ? faMoon : faSun} />
+      </span>
       <Form.Check
         type="switch"
         id="custom-switch"

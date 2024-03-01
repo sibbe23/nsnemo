@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import '../StyledComponents/index';
 import axios from 'axios';
+import { FaShip } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+import {  Button } from 'react-bootstrap'; // Import Container and Button
+import '../../App.css'
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -15,6 +18,15 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -24,63 +36,60 @@ const Login = () => {
         userPassword: password,
       });
 
-      // Handle successful login
       console.log('Login successful:', response.data);
-      const {token,userId} = response.data
-      console.log(token,userId)
-      localStorage.setItem('token',token)
-      localStorage.setItem('userId',userId)
-      // Redirect to indexpage or user-managment
-      window.location.href = '/user-dashboard'; // Redirect to user dashboard after successful login
+      const { token, userId } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('userId', userId);
+      window.location.href = '/dashboard'; // Redirect to dashboard after successful login
     } catch (error) {
       console.error('Error during login:', error.message);
-      // Handle login error
       console.error('Login failed:', error.response.data.message);
-      // Display an error message to the user
+      // Handle error or display error message to the user
     }
   };
 
   return (
-    <Container fluid className="d-flex justify-content-center align-items-center min-vh-100">
-      <div className="w-100" style={{ maxWidth: '400px' }}>
-        <div className="text-center mb-4">
-          <span className="fw-bold h2 text-primary  " >Nsnemo</span>
+    <div className='login-form'>
+      <h1 className=''>Nsnemo</h1>
+      <div className='container' style={{maxWidth:'800px', margin:'0 auto'}}>
+        <div className='main'>
+          <div className='content'>
+            <h2>User</h2>
+            <form onSubmit={handleSubmit}>
+              <input
+                type='text'
+                placeholder='Username'
+                value={username}
+                onChange={handleUsernameChange}
+                required
+              />
+              <input
+                type='password'
+                placeholder='Password'
+                value={password}
+                onChange={handlePasswordChange}
+                required
+              />
+              <Button className='button' type="submit" style={{ backgroundColor: isHovered ? '#FF520E' : '#045EDD' }} onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}>
+                Login
+              </Button>
+            </form>
+            <div className='text-center'>
+
+            <Link to="/user-forgot-pass" className="text-decoration-none text-secondary btn ">Forgot Password?</Link>
+            </div>
+          </div>
+          <div className='form-img'>
+            <img src='nemo.png' alt='Nsnemo' />
+          </div>
         </div>
-        <h2 className="text-center mb-4 fw-bolder">Sign in to Continue</h2>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="user_id">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              name="email"
-              placeholder="Enter your username"
-              autoFocus
-              autoComplete="username"
-              value={username}
-              onChange={handleUsernameChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="user_pass">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              name="passwords"
-              placeholder="Password"
-              autoComplete="current-password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            <Link to="/user-forgot-pass" className="d-block mt-2 text-end">Forgot Password?</Link>
-          </Form.Group>
-          <Button variant="primary" type="submit" className="w-100">Sign in</Button>
-        </Form>
-        <ul className="mt-3 ">
-          <li>
-            <Link to="/candidate-login" className="text-decoration-none">Redirect - Candidate Login</Link>
-          </li>
-        </ul>
       </div>
-    </Container>
+      <Link to="/candidate-login" className="text-decoration-none text-center">
+        <FaShip className=" me-3" />
+        Redirect - Candidate Login
+      </Link>
+    </div>
   );
 };
 

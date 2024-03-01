@@ -1,10 +1,16 @@
-import React from 'react'
+// User.js
+import React from 'react';
+import Sidebar from '../Sidebar/Sidebar';
 
-function User() {
+const User = ({ children }) => {
   return (
-    <div>
-      User</div>
-  )
+    <div className="user">
+      <Sidebar />
+      <div className="main-content">
+        {children}
+      </div>
+    </div>
+  );
 }
 
-export default User
+export default User;

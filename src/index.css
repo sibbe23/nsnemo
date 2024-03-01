@@ -1,28 +1,82 @@
-/* index.css */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
 :root {
-  --primary-bg-color-light: #ffffff;
-  --primary-text-color-light: #000000;
+  --primary-bg-color-light: #ACC9F7;
+  --primary-text-color-light: #333333;
   --primary-bg-color-dark: #333333;
-  --primary-text-color-dark: #ffffff;
+  --primary-text-color-dark: #ACC9F7;
 }
 
 body {
   margin: 0;
-  font-family: "Poppins", sans-serif;
+  font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* transition: background-color 0.5s ease, color 0.5s ease; */
-  background-color: var(--primary-bg-color-light); /* Default background color */
-  color: var(--primary-text-color-light); /* Default text color */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+.bg-blue {
+  background-color: #3179EA;
+}
+
+.offcanvas-body {
+  background-color: #3179EA;
+  color: white;
 }
 
 .dark-mode {
   background-color: var(--primary-bg-color-dark) !important;
   color: var(--primary-text-color-dark) !important;
+}
+
+.dark-mode .offcanvas-body button {
+  color: white;
+}
+
+.offcanvas-body button {
+  color: white;
+
+}
+
+
+
+.dark-mode .btn:hover {
+  background-color: #4686ED;
+}
+
+.offcanvas-body .btn:hover{
+  background-color: #4686ED;
+
+}
+
+.offcanvas-body .link{
+  color: white;
+
+}
+.offcanvas-body .btn.active {
+  background-color: #4686ED; /* Set the background color for the active button */
+  
+}
+
+.offcanvas-body .btn:hover .dark-svg{
+    fill: orange !important;
+}
+
+
+.dark-mode .dark-svg {
+  fill: var(--primary-text-color-dark) !important;
+}
+
+.dark-svg {
+  fill: var(--primary-text-color-dark) !important;
+}
+
+.dark-mode .form-control {
+  color: #fff !important;
+}
+
+.light-mode-text {
+  color: #fff !important;
+}
+
+.dark-mode .card {
+  background-color: #333333 !important;
+  color: white;
 }
