@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'react-bootstrap';
+import { Table,Button } from 'react-bootstrap';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { MdFirstPage, MdLastPage, MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import axios from 'axios';
@@ -38,8 +38,23 @@ function HospitalView() {
     // Implement edit functionality here
   };
 
-  const deleteHospital = (id) => {
-    // Implement delete functionality here
+  const deleteHospital = async (id) => {
+    const confirmed = window.confirm('Are you sure you want to delete this grade?');
+    if (!confirmed) {
+      return; // Do nothing if user cancels
+    }
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`http://localhost:3000/others/delete-hospital/${id}`, {
+        headers: { "Authorization": token }
+      });
+      if (response.data.success) {
+        // Refresh hospitals list after successful deletion
+        fetchHospitals(currentPage);
+      }
+    } catch (error) {
+      console.error('Error deleting hospital:', error);
+    }
   };
 
   return (
@@ -74,12 +89,9 @@ function HospitalView() {
                 <td>{hospital.doctorEmail}</td>
                 <td>{hospital.doctorUpload}</td>
                 <td>
-                  <Link variant="link" className="p-0 me-2" style={{ color: 'blue' }}>
-                    <FaPencilAlt size={10} />
-                  </Link>
-                  <Link variant="link" className="p-0 me-2" style={{ color: 'red' }}>
-                    <FaTrash size={10} />
-                  </Link>
+                <Link to={`/hospital-edit/${hospital.id}`}><FaPencilAlt className='m-1' style={{ color: 'blue', cursor: 'pointer' }} size={10} onClick={() => editHospital(hospital.id)} /></Link>
+
+                  <FaTrash style={{ color: 'red', cursor: 'pointer' }} size={10} onClick={() => deleteHospital(hospital.id)} />
                 </td>
               </tr>
             ))}

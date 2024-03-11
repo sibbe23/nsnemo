@@ -34,17 +34,40 @@ function DocumentView() {
     setCurrentPage(page);
   };
 
+  const handleDeleteDocument = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this document?');
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`http://localhost:3000/others/delete-document/${id}`, {
+        headers: { "Authorization": token }
+      });
+
+      if (response.data.success) {
+        // If document deleted successfully, fetch documents again to update the list
+        fetchDocuments(currentPage);
+      } else {
+        console.error('Failed to delete document');
+        // Optionally, you can show an error message to the user here
+      }
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      // Optionally, you can show an error message to the user here
+    }
+  };
+
   return (
-    <div className='me-3 ms-3 overflow-scroll' style={{height:'100vh'}}>
+    <div className='me-3 ms-3 overflow-scroll' style={{ height: '100vh' }}>
       <div className="table-responsive text-center">
-      <h4 className="text-center mt-3 mb-0 rounded-0 shadow-none  text-bg-primary card p-4 mt-5 mb-0">Document Table</h4>
-        <Table id="document-list" className='table  table-striped table-bordered text-center' style={{ fontSize: '12px' }}>
+        <h4 className="text-center mt-3 mb-0 rounded-0 shadow-none text-bg-primary card p-4 mt-5 mb-0">Document Table</h4>
+        <Table id="document-list" className='table table-striped table-bordered text-center' style={{ fontSize: '12px' }}>
           <thead>
             <tr>
-              <th scope="col" style={{backgroundColor:'orange', border:'orange solid 2px'}} className='p-1 text-white '>Sno</th>
-              <th scope="col" style={{backgroundColor:'orange', border:'orange solid 2px'}} className='p-1 text-white '>Document Type</th>
-              <th scope="col" style={{backgroundColor:'orange', border:'orange solid 2px'}} className='p-1 text-white '>Hide Expiry Date</th>
-              <th scope="col" style={{backgroundColor:'orange', border:'orange solid 2px'}} className='p-1 text-white '>Actions</th>
+              <th scope="col" style={{ backgroundColor: 'orange', border: 'orange solid 2px' }} className='p-1 text-white'>Sno</th>
+              <th scope="col" style={{ backgroundColor: 'orange', border: 'orange solid 2px' }} className='p-1 text-white'>Document Type</th>
+              <th scope="col" style={{ backgroundColor: 'orange', border: 'orange solid 2px' }} className='p-1 text-white'>Hide Expiry Date</th>
+              <th scope="col" style={{ backgroundColor: 'orange', border: 'orange solid 2px' }} className='p-1 text-white'>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -54,12 +77,11 @@ function DocumentView() {
                 <td>{document.documentType}</td>
                 <td>{document.hideExpiryDate ? 'Yes' : 'No'}</td>
                 <td className='p-0 m-0'>
-                  <Link variant="link" className="p-0 me-2" style={{ color: 'blue' }}>
-                    <FaPencilAlt size={10} />
-                  </Link>
-                  <Link variant="link" className="p-0" style={{ color: 'red' }}>
+                <Link to={`/doc-edit/${document.id}`}><FaPencilAlt className='m-1' style={{ color: 'blue', cursor: 'pointer' }} size={10} /></Link>
+
+                  <Button variant="link" className="p-0" style={{ color: 'red' }} onClick={() => handleDeleteDocument(document.id)}>
                     <FaTrash size={10} />
-                  </Link>
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -70,12 +92,12 @@ function DocumentView() {
             <ul className="pagination">
               <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                 <button className=" border-0 page-link me-1 rounded-1" onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
-                  <MdFirstPage/>
+                  <MdFirstPage />
                 </button>
               </li>
               <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                 <button className=" border-0 page-link rounded-1" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-                  <MdArrowBackIos size={10}/>
+                  <MdArrowBackIos size={10} />
                 </button>
               </li>
               {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
@@ -84,7 +106,7 @@ function DocumentView() {
                     className=" border-0 page-link rounded-1"
                     onClick={() => handlePageChange(page)}
                     style={{
-                      border:'0px',
+                      border: '0px',
                       marginLeft: '3px',
                       backgroundColor: currentPage === page ? '#696CFF' : 'white',
                       color: currentPage === page ? 'white' : 'black',
@@ -96,12 +118,12 @@ function DocumentView() {
               ))}
               <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
                 <button className="border-0 page-link rounded-1 ms-1" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-                  <MdArrowForwardIos size={10}/>
+                  <MdArrowForwardIos size={10} />
                 </button>
               </li>
               <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
                 <button className="border-0 page-link rounded-1 ms-1" onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
-                  <MdLastPage/>
+                  <MdLastPage />
                 </button>
               </li>
             </ul>

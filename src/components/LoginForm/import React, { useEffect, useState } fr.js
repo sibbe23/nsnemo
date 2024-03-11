@@ -7,8 +7,6 @@ import { MdKeyboardArrowRight,MdKeyboardArrowLeft } from "react-icons/md";
 import { Collapse } from 'react-bootstrap'; 
 import ClockToggle from '../Assets/ClockToggle';
 import { Link } from 'react-router-dom';
-import { BsExclamationSquareFill } from "react-icons/bs";
-
 
 
 
@@ -36,7 +34,7 @@ const Sidebar = ( ) => {
   useEffect(() => {
     const offcanvasElement = document.getElementById('offcanvasExample');
     const offcanvas = new Offcanvas(offcanvasElement, {
-      backdrop: true
+      backdrop: false
     });
     const body = document.body;
   
@@ -59,6 +57,27 @@ const Sidebar = ( ) => {
     };
   }, []);
   
+
+  useEffect(() => {
+    const offcanvasElement = document.getElementById('offcanvasExample');
+    const offcanvas = new Offcanvas(offcanvasElement, {
+      backdrop: false
+    });
+    offcanvas.show();
+
+    const handleOutsideClick = (event) => {
+      if (!offcanvasElement.contains(event.target) ) {
+        event.stopPropagation();
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
   const handleDropdownToggle = (dropdownName) => {
     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
   };
@@ -311,28 +330,13 @@ const Sidebar = ( ) => {
                   <div className="country-buttons">
                   <ul><li> <Link to="/country" className="btn   text-start border-0 mb-2 d-block w-100 link">List</Link></li></ul>
                   </div>
-               
-               
                 </Collapse>
-                {/* <button
-                  type="button"
-                  className={`btn text-start border-0 mb-2 d-flex align-items-center w-100 nkd-btn ${activeDropdown === 'nkd' ? 'active' : ''}`}
-                  onClick={() => handleDropdownToggle('nkd')}
-                >
-                <BsExclamationSquareFill  className='me-2 dark-svg' />NKD<span className={`float-end ${activeDropdown === 'nkd' ? 'arrow-up' : 'arrow-down'}`}></span>
-                </button>
-                <Collapse in={activeDropdown === 'nkd'}>
-                  <div className="nkd-buttons">
-                  <ul><li><Link to="/nkd-add" className="btn   text-start border-0 mb-2 d-block w-100 link">Add</Link></li>
-                    <li><Link to="/nkd-view" className="btn   text-start border-0 mb-2 d-block w-100 link">List</Link></li></ul>
-                  </div>
-                </Collapse> */}
                 {/* Vendor Dropdown */}
                 {permissions.vendorManagement && (
                   <>
                 <button
                   type="button"
-                  className={`btn text-start border-0 mb-2 d-flex align-items-center w-100 vendor-btn ${activeDropdown === 'vendor' ? 'active' : ''}`}
+                  className={`btn   text-start border-0 mb-2 d-flex align-items-center w-100 vendor-btn ${activeDropdown === 'vendor' ? 'active' : ''}`}
                   onClick={() => handleDropdownToggle('vendor')}
                 >
                 <FaUser className='me-2 dark-svg' />Vendor<span className={`float-end ${activeDropdown === 'vendor' ? 'arrow-up' : 'arrow-down'}`}></span>
@@ -343,12 +347,24 @@ const Sidebar = ( ) => {
                     <li><Link to="/vendor-view" className="btn   text-start border-0 mb-2 d-block w-100 link">List</Link></li></ul>
                   </div>
                 </Collapse>
-                
-                
                 </>
                 )}
                 </div>
-         
+              {/* End of Settings */}
+              {/* Candidate Management */}
+            
+                {/* Candidate Dropdown */}
+                
+              {/* End of Candidate Management */}
+              {/* User Management */}
+
+                {/* User Dropdown */}
+          
+              {/* End of User Management */}
+                {/* Other dropdowns go here */}
+                {/* Search Dropdown */}
+              
+                {/* Logout Button */}
                 <hr/>
 
                
@@ -357,7 +373,7 @@ const Sidebar = ( ) => {
                 <FaSignOutAlt className='me-2  dark-svg'/>Logout - Nsnemo
                 </button>
                 
-                <div id='username' className='text-center mt-2 fw-bolder border border-secondary-subtle p-2 w-100 rounded-1 link '> Welcome : {username}  </div>
+                <div id='username' className='text-center mt-2 fw-bolder border border-secondary-subtle p-2 w-100 rounded-1 link '> Welcome : {username}</div>
                 <div className="mt-2">
               <ClockToggle  />
                   </div>

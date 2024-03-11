@@ -3,6 +3,7 @@ import { Table, Button } from 'react-bootstrap';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { MdFirstPage, MdLastPage, MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function GradeView() {
   const [grades, setGrades] = useState([]);
@@ -32,6 +33,25 @@ function GradeView() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  const deleteGrade = async (gradeId) => {
+    // Ask for confirmation before deleting
+    const confirmed = window.confirm('Are you sure you want to delete this grade?');
+    if (!confirmed) {
+      return; // Do nothing if user cancels
+    }
+  
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:3000/others/delete-grade/${gradeId}`, {
+        headers: { "Authorization": token }
+      });
+      // Refresh the grades list after deletion
+      fetchGrades(currentPage);
+    } catch (error) {
+      console.error('Error deleting grade:', error);
+    }
+  };
+  
 
   return (
     <div className='me-3 ms-3 overflow-scroll' style={{height:'100vh'}}>
@@ -50,13 +70,9 @@ function GradeView() {
               <tr key={grade.id}>
                 <td>{(currentPage - 1) * limit + index + 1}</td>
                 <td>{grade.gradeExp}</td>
-                <td className='p-0 m-0'>
-                  <Button variant="link" className="p-0 me-2" style={{ color: 'blue' }}>
-                    <FaPencilAlt size={10} />
-                  </Button>
-                  <Button variant="link" className="p-0" style={{ color: 'red' }}>
-                    <FaTrash size={10} />
-                  </Button>
+                <td >
+                <Link to={`/grade-edit/${grade.id}`}><FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} /></Link>
+                <FaTrash style={{ color: 'red', cursor: 'pointer', marginLeft: '10px' }} size={10} onClick={() => deleteGrade(grade.id)} />
                 </td>
               </tr>
             ))}

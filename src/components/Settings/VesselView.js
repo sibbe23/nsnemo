@@ -3,6 +3,7 @@ import { Table } from 'react-bootstrap';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { MdFirstPage, MdLastPage, MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function VesselView() {
   const [showFirstTable, setShowFirstTable] = useState(true);
@@ -43,13 +44,30 @@ function VesselView() {
     setCurrentPage(page);
   };
 
-  const editVessel = (id) => {
-    // Implement edit functionality here
+  const deleteVessel = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this vessel?');
+    if (confirmDelete) {
+      try {
+        const endpoint = showFirstTable ? `delete-vessels/${id}` : `delete-vsl/${id}`;
+        const response = await axios.delete(`http://localhost:3000/others/${endpoint}`, { headers: { "Authorization": localStorage.getItem('token') } });
+        
+        if (response.data.success) {
+          // After successful deletion, refresh the vessel list
+          if (showFirstTable) {
+            displayVessels(currentPage, limit);
+          } else {
+            displayVesselTypes(currentPage, limit);
+          }
+        } else {
+          console.error('Error deleting vessel:', response.data.error);
+        }
+      } catch (error) {
+        console.error('Error deleting vessel:', error);
+      }
+    }
   };
-
-  const deleteVessel = (id) => {
-    // Implement delete functionality here
-  };
+  
+  
 
   return (
     <div className='ms-3 me-3 overflow-scroll' style={{height:'100vh'}}>
@@ -93,7 +111,11 @@ function VesselView() {
                   </>
                 )}
                 <td>
-                  <FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} onClick={() => editVessel(vessel.id)} />
+                  {showFirstTable ? (
+                    <Link to={`/vessel-edit/${vessel.id}`}><FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} /></Link>
+                  ) : (
+                    <Link to={`/vessel-type-edit/${vessel.id}`}><FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} /></Link>
+                  )}
                   <FaTrash style={{ color: 'red', cursor: 'pointer', marginLeft: '10px' }} size={10} onClick={() => deleteVessel(vessel.id)} />
                 </td>
               </tr>

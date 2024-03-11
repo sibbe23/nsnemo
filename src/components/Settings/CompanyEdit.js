@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { CgCheck } from "react-icons/cg";
+import { IoIosClose } from "react-icons/io";
 
 function CompanyEdit() {
   const { companyId } = useParams();
@@ -218,7 +220,9 @@ function CompanyEdit() {
         </Row>
 
         <div className="text-end pb-5">
-          <Button type="submit" variant="primary">Edit Company</Button>
+          <Button type="submit" variant="primary"><CgCheck/> Save Changes</Button>
+          <Link to={`/company-view`} className='btn btn-danger ms-2'><IoIosClose/> Cancel</Link>
+
         </div>
       </Form>
     </div>

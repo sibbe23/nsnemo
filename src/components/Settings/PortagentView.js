@@ -34,12 +34,29 @@ function PortAgentView() {
     // Implement edit functionality here
   };
 
-  const deletePortAgent = (id) => {
-    // Implement delete functionality here
+  const deletePortAgent = async (id) => {
+    // Ask for confirmation before deleting
+    const confirmDelete = window.confirm("Are you sure you want to delete this port agent?");
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`http://localhost:3000/others/delete-port-agent/${id}`, {
+        headers: { "Authorization": token }
+      });
+      if (response.data.success) {
+        // If delete operation was successful, update the port agents list
+        displayPortagent(currentPage, limit);
+      } else {
+        console.error('Error deleting port agent:', response.data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting port agent:', error);
+    }
   };
 
   return (
-    <div className='me-3 ms-3 overflow-scroll' style={{height:'100vh'}}>
+    <div className='me-3 ms-3 overflow-scroll' style={{ height: '100vh' }}>
       <div className="table-responsive text-center" style={{ height: '100vh' }}>
         <h4 className="text-center mt-3 mb-0 rounded-0 shadow-none text-bg-primary card p-4 mt-5 mb-0">Port Agent Table</h4>
         <Table id="port-agent-list" className="table  table-striped table-bordered" style={{ fontSize: '12px' }}>
@@ -70,9 +87,8 @@ function PortAgentView() {
                 <td>{portAgent.email}</td>
                 <td>{portAgent.country}</td>
                 <td>
-                  <Link to="#" className="p-0 me-2" style={{ color: 'blue' }} onClick={() => editPortAgent(portAgent.id, portAgent.portAgentName, portAgent.contactPerson, portAgent.address, portAgent.phone, portAgent.email, portAgent.city, portAgent.state, portAgent.country)}>
-                    <FaPencilAlt size={10} />
-                  </Link>
+                <Link to={`/portagent-edit/${portAgent.id}`}><FaPencilAlt className='m-1' style={{ color: 'blue', cursor: 'pointer' }} size={10} onClick={() => editPortAgent(portAgent.id)} /></Link>
+
                   <Link to="#" className="p-0 me-2" style={{ color: 'red' }} onClick={() => deletePortAgent(portAgent.id)}>
                     <FaTrash size={10} />
                   </Link>

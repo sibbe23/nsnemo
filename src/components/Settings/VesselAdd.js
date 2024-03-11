@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import { CgCheck } from "react-icons/cg";
+import { IoIosClose } from "react-icons/io";
+import { Link } from 'react-router-dom';
 
 function VesselForm() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -34,8 +37,10 @@ function VesselForm() {
           </Col>
         </Form.Group>
         <div className="text-end">
-          <Button type="submit" variant="primary">ADD VESSEL</Button>
-        </div>
+                <Button type="submit" variant="primary"> <CgCheck/> Add Vessel</Button>
+                <Link to={`/vessel-view`} className='btn btn-danger ms-2'> <IoIosClose/> Cancel</Link>
+
+              </div>
       </Form>
     </div>
   );
@@ -95,8 +100,10 @@ function VslForm() {
           <Form.Control type="text" name="vessel_flag" placeholder='Enter Vessel Flag' required />
         </Form.Group>
         <div className="text-end">
-          <Button type="submit" variant="primary">ADD VESSEL TYPE</Button>
-        </div>
+                <Button type="submit" variant="primary"> <CgCheck/> Add Vessel Type</Button>
+                <Link to={`/vessel-view`} className='btn btn-danger ms-2'> <IoIosClose/> Cancel</Link>
+
+              </div>
       </Form>
     </div>
   );

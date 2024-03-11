@@ -3,7 +3,7 @@ import { Table, Card, Button } from 'react-bootstrap';
 import { MdFirstPage, MdLastPage, MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import axios from 'axios';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
-
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 function ExpView() {
   const [experiences, setExperiences] = useState([]);
@@ -17,12 +17,10 @@ function ExpView() {
 
   const fetchExperiences = async (page) => {
     try {
-      // Perform GET request to fetch experiences from the server
       const token = localStorage.getItem('token');
       const response = await axios.get(`http://localhost:3000/others/view-experience?page=${page}&limit=${limit}`, {
         headers: { "Authorization": token }
       });
-      // Update the state with the fetched experiences and total pages
       setExperiences(response.data.experiences);
       setTotalPages(Math.ceil(response.data.totalPages));
     } catch (error) {
@@ -34,16 +32,36 @@ function ExpView() {
     setCurrentPage(page);
   };
 
+  const deleteExperience = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this experience?');
+    if (confirmDelete) {
+      try {
+        const response = await axios.delete(`http://localhost:3000/others/delete-experience/${id}`, {
+          headers: { "Authorization": localStorage.getItem('token') }
+        });
+
+        if (response.data.success) {
+          // After successful deletion, refresh the experience list
+          fetchExperiences(currentPage);
+        } else {
+          console.error('Error deleting experience:', response.data.error);
+        }
+      } catch (error) {
+        console.error('Error deleting experience:', error);
+      }
+    }
+  };
+
   return (
-    <Card.Body className="pb-0 me-3 ms-3 overflow-scroll" style={{height:'100vh'}}>
-      <h4 className="text-center mt-3 mb-0 rounded-0 shadow-none  text-bg-primary card p-4 mt-5 mb-0">Experience Table</h4>
+    <Card.Body className="pb-0 me-3 ms-3 overflow-scroll" style={{ height: '100vh' }}>
+      <h4 className="text-center mt-3 mb-0 rounded-0 shadow-none text-bg-primary card p-4 mt-5 mb-0">Experience Table</h4>
       <div className="table-responsive text-center">
         <Table id="exp-list" className='table table-striped table-bordered text-center' style={{ fontSize: '12px' }}>
           <thead>
             <tr>
-              <th scope='col' style={{backgroundColor:'orange', border:'orange solid 2px'}} className='p-1 text-white col-1 '>Sno</th>
-              <th scope='col' style={{backgroundColor:'orange', border:'orange solid 2px'}} className='p-1 text-white '>Experience</th>
-              <th scope='col' style={{backgroundColor:'orange', border:'orange solid 2px'}} className='p-1 text-white col-1 '>Actions</th>
+              <th scope='col' style={{ backgroundColor: 'orange', border: 'orange solid 2px' }} className='p-1 text-white col-1 '>Sno</th>
+              <th scope='col' style={{ backgroundColor: 'orange', border: 'orange solid 2px' }} className='p-1 text-white '>Experience</th>
+              <th scope='col' style={{ backgroundColor: 'orange', border: 'orange solid 2px' }} className='p-1 text-white col-1 '>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -52,12 +70,8 @@ function ExpView() {
                 <td>{(currentPage - 1) * limit + index + 1}</td>
                 <td>{experience.experience}</td>
                 <td className='p-0 m-0'>
-                  <Button variant="link" className="p-0 me-2" style={{ color: 'blue' }}>
-                    <FaPencilAlt size={10} />
-                  </Button>
-                  <Button variant="link" className="p-0" style={{ color: 'red' }}>
-                    <FaTrash size={10} />
-                  </Button>
+                  <Link to={`/exp-edit/${experience.id}`}><FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} /></Link>
+                  <FaTrash style={{ color: 'red', cursor: 'pointer', marginLeft: '10px' }} size={10} onClick={() => deleteExperience(experience.id)} />
                 </td>
               </tr>
             ))}
@@ -67,13 +81,8 @@ function ExpView() {
           <nav aria-label="Page navigation example">
             <ul className="pagination">
               <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                <button className="border-0 page-link me-1 rounded-1" onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
-                  <MdFirstPage/>
-                </button>
-              </li>
-              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                 <button className="border-0 page-link rounded-1" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-                  <MdArrowBackIos size={10}/>
+                  <MdArrowBackIos size={10} />
                 </button>
               </li>
               {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
@@ -82,7 +91,7 @@ function ExpView() {
                     className="border-0 page-link rounded-1"
                     onClick={() => handlePageChange(page)}
                     style={{
-                      border:'0px',
+                      border: '0px',
                       marginLeft: '3px',
                       backgroundColor: currentPage === page ? '#696CFF' : 'white',
                       color: currentPage === page ? 'white' : 'black',
@@ -94,12 +103,12 @@ function ExpView() {
               ))}
               <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
                 <button className="border-0 page-link rounded-1 ms-1" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-                  <MdArrowForwardIos size={10}/>
+                  <MdArrowForwardIos size={10} />
                 </button>
               </li>
               <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
                 <button className="border-0 page-link rounded-1 ms-1" onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
-                  <MdLastPage/>
+                  <MdLastPage />
                 </button>
               </li>
             </ul>

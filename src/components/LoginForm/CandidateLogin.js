@@ -39,9 +39,9 @@ const CandidateLogin = () => {
   };
 
   return (
-    <div className='login-form' style={{height:'100vh'}}>
+    <div className='login-form' >
       <h1 className=''>Nsnemo</h1>
-      <div className='container' style={{maxWidth:'800px', margin:'0 auto'}}>
+      <div className='container' style={{maxWidth:'800px'}}>
         <div className='main'>
           <div className='content'>
             <h2>Candidate</h2>

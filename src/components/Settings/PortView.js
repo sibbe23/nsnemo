@@ -3,6 +3,7 @@ import { Table } from 'react-bootstrap';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { MdFirstPage, MdLastPage, MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function PortView() {
   const [ports, setPorts] = useState([]);
@@ -33,12 +34,28 @@ function PortView() {
     // Implement edit functionality here
   };
 
-  const deletePort = (id) => {
-    // Implement delete functionality here
+  const deletePort = async (id) => {
+    const confirmed = window.confirm('Are you sure you want to delete this port?');
+    if (confirmed) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.delete(`http://localhost:3000/others/delete-port/${id}`, { headers: { "Authorization": token } });
+        if (response.data.success) {
+          // If port is successfully deleted, fetch ports again to update the list
+          displayPort(currentPage, limit);
+        } else {
+          console.error('Error:', response.data.error);
+          // Handle error cases, e.g., show error message to the user
+        }
+      } catch (error) {
+        console.error('Error deleting port:', error);
+        // Handle error cases, e.g., show error message to the user
+      }
+    }
   };
 
   return (
-    <div className="table-responsive text-center  me-3 ms-3 overflow-scroll" style={{height:'100vh'}}>
+    <div className="table-responsive text-center me-3 ms-3 overflow-scroll" style={{ height: '100vh' }}>
       <h4 className="text-center mb-0 rounded-0 shadow-none text-bg-primary card p-4 mt-5 mb-0 ">Port Table</h4>
       <Table id="port-list" className="table table-striped table-bordered" style={{ fontSize: '12px' }}>
         <thead>
@@ -54,7 +71,7 @@ function PortView() {
               <td>{(currentPage - 1) * limit + index + 1}</td>
               <td>{port.portName}</td>
               <td>
-                <FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} onClick={() => editPort(port.id, port.portName)} />
+                <Link to={`/port-edit/${port.id}`}><FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} onClick={() => editPort(port.id)} /></Link>
                 <FaTrash style={{ color: 'red', cursor: 'pointer', marginLeft: '10px' }} size={10} onClick={() => deletePort(port.id)} />
               </td>
             </tr>

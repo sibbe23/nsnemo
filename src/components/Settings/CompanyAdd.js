@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import { CgCheck } from "react-icons/cg";
+import { IoIosClose } from "react-icons/io";
+import { Link } from 'react-router-dom';
 
 function CompanyAdd() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -14,6 +17,8 @@ function CompanyAdd() {
     c_ph: '',
     c_last_update: ''
   });
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,7 +58,7 @@ function CompanyAdd() {
   return (
     <div className="p-5 overflow-y-auto d-flex justify-content-center " style={{ height: '100vh' }}>
       <Form onSubmit={handleSubmit} className="w-100 ">
-        <h4 className='mb-3 '>Company Add</h4>
+        <h4 className='mb-3 fw-bolder'>Company Add</h4>
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         <Row className="mb-3">
           <Form.Group as={Col} controlId="company_name">
@@ -138,8 +143,10 @@ function CompanyAdd() {
           </Form.Group>
         </Row>
 
-        <div className="text-end  pb-5">
-          <Button type="submit" variant="primary">Add Company</Button>
+        <div className="text-end pb-5">
+          <Button type="submit" variant="primary"><CgCheck/> Add Company</Button>
+          <Link to={`/company-view`} className='btn btn-danger ms-2'><IoIosClose/> Cancel</Link>
+
         </div>
       </Form>
     </div>

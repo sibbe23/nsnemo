@@ -3,6 +3,7 @@ import { Table } from 'react-bootstrap';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { MdFirstPage, MdLastPage, MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function RankView() {
   const [ranks, setRanks] = useState([]);
@@ -59,7 +60,7 @@ function RankView() {
               <td>{rank.category}</td>
               <td>
                 
-                <FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} onClick={() => editRank(rank.id, rank.rank, rank.rankOrder, rank.category)} />
+              <Link to={`/rank-edit/${rank.id}`}><FaPencilAlt style={{ color: 'blue', cursor: 'pointer' }} size={10} /></Link>
                 <FaTrash style={{ color: 'red', cursor: 'pointer', marginLeft: '10px' }} size={10} onClick={() => deleteRank(rank.id)} />
               </td>
             </tr>
